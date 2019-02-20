@@ -12,16 +12,14 @@ The K-means algorithm takes as an input :
 
 The algorithm proceeds as follow:
 ```
-Initialization
-
 1. Choose k data points at random as centroid candidates
-1. While the association between data points and centroids keep changing
-	1. For each point in the data set
-		1. Compute its distance to all centroid candidates
-		1. Associate that data point to the closest centroid candidate (using a distance measure like the euclidean distance)
-	1. For each centroid candidate
-		1. Calculate a new centroid candidate that is a vector which components are the mean of all associated data point
-1. We know have our centroids, and their associated data points forming clusters around them
+2. While the association between data points and centroids keep changing
+	* For each point in the data set
+		* Compute its distance to all centroid candidates
+		* Associate that data point to the closest centroid candidate (using a distance measure like the euclidean distance)
+	* For each centroid candidate
+		* Calculate a new centroid candidate that is a vector which components are the mean of all associated data point
+3. We know have our centroids, and their associated data points forming clusters around them
 ```
 
 ## Visualization
