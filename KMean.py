@@ -24,7 +24,7 @@ def EuclideanDistance(v1,v2):
     else:
         raise Exception("The 2 vectors passed don't have the same dimension ("+str(len(v1)) + " & "+str( len(v2))+")")
         
-def AverageListElt(l):
+def ListAverage(l):
     """
     Returns the average of a list of numerical values.
     """
@@ -66,7 +66,9 @@ def RearrangeList(l):
 def HaveSameInternalValues (l1, l2):
     """
     Work around the fact you can't test egality of 2 list of list of np.array.
-    Only used for representation. Again, not very elegant.
+    Only used for representation. Again, not very elegant, a better data structure would
+    probably solve it, but as it is not used for classification but for representation
+    it's not worth it.
     """
     if len(l1)==len(l2):
         for i, (elt1, elt2) in enumerate(zip(l1, l2)):
@@ -82,6 +84,10 @@ def HaveSameInternalValues (l1, l2):
     return False
 
 def ShowCurrentState(currentClusteredList, currentClusterCenters,k):
+    """
+    ShowCurrentState print the current state of the k-mean algorithm as a plot where the current cluster center
+    is represented in black, and each current cluster is represented with a different color.
+    """
     #Cycle on 20 distinguishable colors for clusters
     plt.rc('axes', prop_cycle=(cycler('color', ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231', '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe', '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000', '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080'])))
             
@@ -98,6 +104,12 @@ def ShowCurrentState(currentClusteredList, currentClusterCenters,k):
 #KMEAN ALGORITHM
     
 def KMean (data, k):
+    """
+    Returns a tuple made of the number of iteration and a list of length k (each index associated with a cluster), 
+    containing arrays of the coordinates of the data point associated with a cluster.
+    """
+    
+    """Initialisation"""
     #Select k random points in the dataset   
     startingPoints = np.random.randint(low=0, high=len(data)-1, size=k)
     currentClusterCenters = []
@@ -111,7 +123,9 @@ def KMean (data, k):
         currentClusterCenters.append([data[startingPoints[j],0], data[startingPoints[j],1]])
     
     done=False
+    iterCount = 1
     
+    """Iterative sorting"""
     while done==False:
         currentClusteredList = []
         for j in range(k):
@@ -125,24 +139,27 @@ def KMean (data, k):
             currentClusteredList[IndexOfSmallestListElt(distanceList)].append(elt)
             
         if HaveSameInternalValues(currentClusteredList, oldClusteredList): 
-            ShowCurrentState(currentClusteredList, currentClusterCenters, k)
+            #ShowCurrentState(currentClusteredList, currentClusterCenters, k)
+            print('\r(final iteration)')
             done = True
             
-        if done == False:
-            oldClusteredList = currentClusteredList
-            
+        else:
             ShowCurrentState(currentClusteredList, currentClusterCenters, k)
+            oldClusteredList = currentClusteredList
+            print('Iteration number',iterCount)
+            iterCount+=1
                   
             for l, center in enumerate(currentClusterCenters):
-                center[0] = AverageListElt(RearrangeList(currentClusteredList[l])[0:len(RearrangeList(currentClusteredList[l])),0])
-                center[1] = AverageListElt(RearrangeList(currentClusteredList[l])[0:len(RearrangeList(currentClusteredList[l])),1])
+                center[0] = ListAverage(RearrangeList(currentClusteredList[l])[0:len(RearrangeList(currentClusteredList[l])),0])
+                center[1] = ListAverage(RearrangeList(currentClusteredList[l])[0:len(RearrangeList(currentClusteredList[l])),1])
     
-    return currentClusteredList
+    return (iterCount-1, currentClusteredList)
     
 #_____________________________________________________
 #TEST SCRIPT
 if __name__ == "__main__":
         
+    """
     #Let's generate some 2Ddata points randomly, but grouped in 3 clusters
     dataSet = np.random.rand(150, 2)
     dataSet[50:99,:] = - 2 * np.random.rand(49,2)
@@ -154,9 +171,14 @@ if __name__ == "__main__":
     plt.scatter(dataSet[100:149, 0], dataSet[100:149, 1], s=20, c = 'r')
     plt.show()
     
-    clusteredList = KMean(dataSet, 3)
-    print()
+    numberOfIteration ,clusteredList = KMean(dataSet, 3)
+    """
+    testData = np.genfromtxt("../MultiD_Matrix_Projection/Example/projectedTestSet.csv", delimiter=',')
+    numberOfIteration ,clusteredList = KMean(testData, 3)
+
     
+
+
     
     
     
