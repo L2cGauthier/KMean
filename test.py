@@ -2,7 +2,7 @@
 
 import numpy as np
 import pandas as pd
-import KMean as km
+import KMeans as km
 
 def GenerateNRandTestData(shape=(100, 5)):
     """
@@ -45,7 +45,7 @@ def ReadTestData(path='Example/testSet.csv'):
 if __name__ == "__main__":
     
     testData = np.genfromtxt("Example/projectedTestSet.csv", delimiter=',')
-    numberOfIteration ,clusteredList = km.KMean(testData, 3)
+    numberOfIteration ,clusteredList = km.KMeans(testData, 3)
     
     
 
