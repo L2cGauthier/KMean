@@ -154,7 +154,7 @@ if __name__ == "__main__":
     plt.scatter(dataSet[100:149, 0], dataSet[100:149, 1], s=20, c = 'r')
     plt.show()
     
-    clusteredList = KMean(dataSet, 20)
+    clusteredList = KMean(dataSet, 3)
     print()
     
     
